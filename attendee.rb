@@ -23,8 +23,8 @@ class Attendee
       when :state
         v.upcase! unless v.nil?
       when :street
-        v.split.map! {|w| w.capitalize!}.join(" ") unless !v  #capitalize each word
-      end
+        v=v.split(" ").map! {|w| (w.to_i) != 0 ? w : w.capitalize }.join(" ") unless !v  #capitalize each word
+      end 
       send("#{k}=",v)
       @attr_array.push v
     end
