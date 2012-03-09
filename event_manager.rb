@@ -3,6 +3,7 @@ require "sunlight"
 require "./attendee.rb"
 class EventManager
   Sunlight::Base.api_key = "e179a6973728c4dd3fb1204283aaccb5"
+  DATEFORMAT = "%m/%d/%y"
   attr_accessor :attendees
   attr_reader :headers
   def initialize(filename='event_attendees.csv',output='event_attendees_clean.csv')
@@ -59,7 +60,7 @@ class EventManager
     days = {0 => 0,1 => 0,2 => 0,3 => 0,4 => 0,5 => 0,6 => 0}
     @attendees.each do |a|
       if a.regdate =~/(\d+\/\d+\/\d+)/
-        days[Date.strptime($1, "%m/%d/%y").wday] += 1
+        days[Date.strptime($1, DATEFORMAT).wday] += 1
       end
     end
     sorted = days.sort_by{|k,v| v}.reverse   #sort hash by values
