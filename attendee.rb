@@ -6,10 +6,9 @@ class Attendee
   attr_accessor :congressmen
   def initialize(hash={})
     @attr_array = []
-    hash.each do |k,v| #add getters/setters for instance variables of each hash key, set value
+    hash.each do |k,v| #add accessors for instance variables of each hash key, set value
       singleton_class.class_eval do
-        define_method(k){instance_variable_get("@#{k}")}
-        define_method("#{k}="){|value|instance_variable_set("@#{k}",value)}
+        attr_accessor k
       end
       case k
       when :homephone
@@ -31,9 +30,19 @@ class Attendee
   end
   private
   def clean_number(num)
-    num=~/\D*[1]{0,1}(\d{3})\D*(\d{3})\D*(\d{4})\D*/? #ignore the junk
-          "#{$1}#{$2}#{$3}":  #pick out 10 digits (not leading 1) if number is legit
-          INVALID_PHONE_NUMBER        #else return 10 0s
+    num.gsub(/\D/, "") #kill the junk
+    case num.length  #pick out 10 digits (not leading 1) if number is legit
+    when 10
+      num
+    when 11
+      if num.start_with? "1"
+        num = num[1,-1]
+      else
+        num = INVALID_PHONE_NUMBER
+      end
+    else
+      num = INVALID_PHONE_NUMBER
+    end
   end
   def clean_zip(zip)
     reg = /[\D]+/  #garbage

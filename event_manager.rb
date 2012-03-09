@@ -57,7 +57,7 @@ class EventManager
   ap hours
   end
   def day_stats
-    days = {0 => 0,1 => 0,2 => 0,3 => 0,4 => 0,5 => 0,6 => 0}
+    days = Hash.new{0}
     @attendees.each do |a|
       if a.regdate =~/(\d+\/\d+\/\d+)/
         days[Date.strptime($1, DATEFORMAT).wday] += 1
@@ -85,23 +85,7 @@ class EventManager
     output.write(letter)
   end
   def num_to_day(num)
-    puts num
-    case num
-    when 0
-      "Sunday"
-    when 1
-      "Monday"
-    when 2
-      "Tuesday"
-    when 3
-      "Wednesday"
-    when 4
-      "Thursday"
-    when 5
-      "Friday"
-    when 6
-      "Saturday"
-    end
+    ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][num]
   end
 end
 
