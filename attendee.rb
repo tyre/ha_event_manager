@@ -10,25 +10,28 @@ class Attendee
       singleton_class.class_eval do
         attr_accessor k
       end
-      case k
-      when :homephone
-        v = clean_number(v)
-      when :zipcode
-        v = v.nil? ? INVALID_ZIPCODE : clean_zip(v)
-      when :first_name, :last_name, :city
-        if v
-          v.capitalize!
-        end
-      when :state
-        v.upcase! unless v.nil?
-      when :street
-        v=v.split(" ").map! {|w| (w.to_i) != 0 ? w : w.capitalize }.join(" ") unless !v  #capitalize each word
-      end 
+      v = clean_up(k,v)
       send("#{k}=",v)
       @attr_array.push v
     end
   end
   private
+  def clean_up
+    case k
+    when :homephone
+      v = clean_number(v)
+    when :zipcode
+      v = v.nil? ? INVALID_ZIPCODE : clean_zip(v)
+    when :first_name, :last_name, :city
+      if v
+        v.capitalize!
+      end
+    when :state
+      v.upcase! unless v.nil?
+    when :street
+      v=v.split(" ").map! {|w| (w.to_i) != 0 ? w : w.capitalize }.join(" ") unless !v  #capitalize each word
+    end
+  end
   def clean_number(num)
     num.gsub(/\D/, "") #kill the junk
     case num.length  #pick out 10 digits (not leading 1) if number is legit
